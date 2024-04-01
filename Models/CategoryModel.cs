@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ProductManagement.Models;
 
@@ -18,5 +19,5 @@ public class Category
     [RegularExpression("^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$", ErrorMessage = "Please enter a valid hexadecimal RGB color value.")]
     public required string Color { get; set; }
 
-    public virtual required ICollection<Product> Products { get; set; }
+    public virtual ICollection<Product> Products { get; set; } = [];
 }

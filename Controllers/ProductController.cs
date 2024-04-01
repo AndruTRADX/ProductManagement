@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProductManagement.Context;
 using ProductManagement.Models;
 using ProductManagement.Services;
 
@@ -6,9 +8,10 @@ namespace ProductManagement.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ProductController(IProductService productService) : ControllerBase
+public class ProductController(IProductService productService, ProductContext dbContext) : ControllerBase
 {
     private readonly IProductService _productService = productService;
+    readonly ProductContext _dbContext = dbContext;
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -63,5 +66,12 @@ public class ProductController(IProductService productService) : ControllerBase
 
         await _productService.Delete(id);
         return NoContent();
+    }
+
+    [HttpGet()]
+    [Route("/ensure-created")]
+    public IActionResult CreateDatabase()
+    {
+        return Ok(_dbContext.Database.EnsureCreated());
     }
 }

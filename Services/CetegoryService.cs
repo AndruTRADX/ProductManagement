@@ -50,6 +50,28 @@ public class CategoryService(ProductContext productContext) : ICategoryService
             await _dbContext.SaveChangesAsync();
         }
     }
+
+    public async Task AddProductToCategory(Guid categoryId, Guid productId)
+    {
+        var category = await _dbContext.Categories
+            .Include(c => c.Products)
+            .FirstOrDefaultAsync(c => c.CategoryID == categoryId);
+
+        if (category != null)
+        {
+            var existingProduct = await _dbContext.Products.FindAsync(productId);
+
+            if (existingProduct != null)
+            {
+                category.Products.Add(existingProduct);
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Product not found.");
+            }
+        }
+    }
 }
 
 public interface ICategoryService
@@ -59,4 +81,5 @@ public interface ICategoryService
     Task Save(Category category);
     Task Update(Guid id, Category category);
     Task Delete(Guid id);
+    Task AddProductToCategory(Guid categoryId, Guid productId);
 }

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace ProductManagement.Models;
 
@@ -14,5 +15,5 @@ public class Brand
     [Required(ErrorMessage = "The Logo field is required.")]
     public required string Logo { get; set; }
 
-    public virtual required ICollection<Product> Products { get; set; }
+    public virtual ICollection<Product> Products { get; set; } = [];
 }

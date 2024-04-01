@@ -27,6 +27,7 @@ public class ProductContext(DbContextOptions<ProductContext> options) : DbContex
             entity.Property(p => p.Image).IsRequired();
             entity.Property(p => p.Stock).IsRequired();
             entity.HasOne(p => p.Category).WithMany(c => c.Products).HasForeignKey(p => p.CategoryID);
+            entity.HasOne(p => p.Brand).WithMany(c => c.Products).HasForeignKey(p => p.BrandID);
         });
     }
 

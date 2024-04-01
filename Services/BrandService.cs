@@ -49,6 +49,28 @@ public class BrandService(ProductContext productContext) : IBrandService
             await _dbContext.SaveChangesAsync();
         }
     }
+
+    public async Task AddProductToBrand(Guid brandId, Guid productId)
+{
+    var brand = await _dbContext.Brands
+        .Include(b => b.Products)
+        .FirstOrDefaultAsync(b => b.BrandID == brandId);
+
+    if (brand != null)
+    {
+        var existingProduct = await _dbContext.Products.FindAsync(productId);
+
+        if (existingProduct != null)
+        {
+            brand.Products.Add(existingProduct);
+            await _dbContext.SaveChangesAsync();
+        }
+        else
+        {
+            throw new Exception("Product not found.");
+        }
+    }
+}
 }
 public interface IBrandService
 {
@@ -57,4 +79,5 @@ public interface IBrandService
     Task Save(Brand brand);
     Task Update(Guid id, Brand brand);
     Task Delete(Guid id);
+    Task AddProductToBrand(Guid brandId, Guid productId);
 }

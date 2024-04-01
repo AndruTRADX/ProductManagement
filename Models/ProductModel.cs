@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace ProductManagement.Models;
 
@@ -25,5 +26,13 @@ public class Product
 
     [ForeignKey("Category")]
     public Guid CategoryID { get; set; }
+
+    [JsonIgnore]
     public virtual Category? Category { get; set; }
+
+    [ForeignKey("Brand")]
+    public Guid BrandID { get; set; }
+
+    [JsonIgnore]
+    public virtual Brand? Brand { get; set; }
 }

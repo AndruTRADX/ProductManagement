@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using ProductManagement.Context;
 using ProductManagement.Services;
 
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Create the configuration to add an in-memory DB
+/* builder.Services.AddDbContext<ProductContext>(p => p.UseInMemoryDatabase("ProductsDB")); */
 
 // Create the configuration to add a SQL database connection
 builder.Services.AddSqlServer<ProductContext>(builder.Configuration.GetConnectionString("cnProducts"));
