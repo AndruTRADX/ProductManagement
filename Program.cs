@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
-using ProductManagement;
+using ProductManagement.Context;
+using ProductManagement.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Create the configuration to add a SQL database connection
-// builder.Services.AddSqlServer<TasksContext>(builder.Configuration.GetConnectionString("cnTasks"));
+builder.Services.AddSqlServer<ProductContext>(builder.Configuration.GetConnectionString("cnProducts"));
+
+// Injectors
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IBrandService, BrandService>();
 
 var app = builder.Build();
 
