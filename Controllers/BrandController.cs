@@ -11,9 +11,9 @@ public class BrandController(IBrandService brandService) : ControllerBase
     private readonly IBrandService _brandService = brandService;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
     {
-        var brands = await _brandService.GetAll();
+        var brands = await _brandService.GetAll(page, pageSize);
         return Ok(brands);
     }
 

@@ -15,9 +15,11 @@ public class BrandService(ProductContext productContext) : IBrandService
             .FirstOrDefaultAsync(b => b.BrandID == id);
     }
 
-    public async Task<IEnumerable<Brand>> GetAll()
+    public async Task<IEnumerable<Brand>> GetAll(int page, int pageSize)
     {
-        return await _dbContext.Brands.ToListAsync();
+        var brandsPerPage = await _dbContext.Brands.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        return brandsPerPage;
     }
 
     public async Task Save(Brand brand)
@@ -51,30 +53,30 @@ public class BrandService(ProductContext productContext) : IBrandService
     }
 
     public async Task AddProductToBrand(Guid brandId, Guid productId)
-{
-    var brand = await _dbContext.Brands
-        .Include(b => b.Products)
-        .FirstOrDefaultAsync(b => b.BrandID == brandId);
-
-    if (brand != null)
     {
-        var existingProduct = await _dbContext.Products.FindAsync(productId);
+        var brand = await _dbContext.Brands
+            .Include(b => b.Products)
+            .FirstOrDefaultAsync(b => b.BrandID == brandId);
 
-        if (existingProduct != null)
+        if (brand != null)
         {
-            brand.Products.Add(existingProduct);
-            await _dbContext.SaveChangesAsync();
-        }
-        else
-        {
-            throw new Exception("Product not found.");
+            var existingProduct = await _dbContext.Products.FindAsync(productId);
+
+            if (existingProduct != null)
+            {
+                brand.Products.Add(existingProduct);
+                await _dbContext.SaveChangesAsync();
+            }
+            else
+            {
+                throw new Exception("Product not found.");
+            }
         }
     }
 }
-}
 public interface IBrandService
 {
-    Task<IEnumerable<Brand>> GetAll();
+    Task<IEnumerable<Brand>> GetAll(int page, int pageSize);
     Task<Brand?> Get(Guid id);
     Task Save(Brand brand);
     Task Update(Guid id, Brand brand);

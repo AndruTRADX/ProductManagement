@@ -15,9 +15,11 @@ public class CategoryService(ProductContext productContext) : ICategoryService
             .FirstOrDefaultAsync(c => c.CategoryID == id);
     }
 
-    public async Task<IEnumerable<Category>> GetAll()
+    public async Task<IEnumerable<Category>> GetAll(int page, int pageSize)
     {
-        return await _dbContext.Categories.ToListAsync();
+        var categoriesPerPage = await _dbContext.Categories.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        return categoriesPerPage;
     }
 
     public async Task Save(Category category)
@@ -76,7 +78,7 @@ public class CategoryService(ProductContext productContext) : ICategoryService
 
 public interface ICategoryService
 {
-    Task<IEnumerable<Category>> GetAll();
+    Task<IEnumerable<Category>> GetAll(int page, int pageSize);
     Task<Category?> Get(Guid id);
     Task Save(Category category);
     Task Update(Guid id, Category category);

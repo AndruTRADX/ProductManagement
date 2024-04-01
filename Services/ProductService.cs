@@ -15,9 +15,13 @@ public class ProductService(ProductContext productContext, ICategoryService cate
         return await _dbContext.Products.FindAsync(id);
     }
 
-    public async Task<IEnumerable<Product>> GetAll()
+    public async Task<IEnumerable<Product>> GetAll(int page, int pageSize)
     {
-        return await _dbContext.Products.ToListAsync();
+        var totalCount = _dbContext.Products.Count();
+        var totalPages = (int)Math.Ceiling((decimal)totalCount / pageSize);
+        var productsPerPage = await _dbContext.Products.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+        return productsPerPage;
     }
 
     public async Task Save(Product product)
@@ -69,7 +73,7 @@ public class ProductService(ProductContext productContext, ICategoryService cate
 
 public interface IProductService
 {
-    Task<IEnumerable<Product>> GetAll();
+    Task<IEnumerable<Product>> GetAll(int page, int pageSize);
     Task<Product?> Get(Guid id);
     Task Save(Product product);
     Task Update(Guid id, Product product);

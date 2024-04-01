@@ -11,9 +11,9 @@ public class CategoryController(ICategoryService categoryService) : ControllerBa
     private readonly ICategoryService _categoryService = categoryService;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
     {
-        var categories = await _categoryService.GetAll();
+        var categories = await _categoryService.GetAll(page, pageSize);
         return Ok(categories);
     }
 

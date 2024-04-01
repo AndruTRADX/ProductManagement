@@ -13,9 +13,9 @@ public class ProductController(IProductService productService, ProductContext db
     readonly ProductContext _dbContext = dbContext;
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(int page = 1, int pageSize = 10)
     {
-        var products = await _productService.GetAll();
+        var products = await _productService.GetAll(page, pageSize);
         return Ok(products);
     }
 
