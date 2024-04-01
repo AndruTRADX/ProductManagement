@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using ProductManagement.Context;
 using ProductManagement.Models;
 using ProductManagement.Services;
