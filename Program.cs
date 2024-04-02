@@ -20,6 +20,7 @@ builder.Services.AddSqlServer<ProductContext>(builder.Configuration.GetConnectio
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IBrandService, BrandService>();
+builder.Services.AddScoped<IUserService, UserServices>();
 
 var app = builder.Build();
 
