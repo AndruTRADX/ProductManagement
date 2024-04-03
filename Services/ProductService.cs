@@ -51,6 +51,7 @@ public class ProductService(ProductContext productContext, ICategoryService cate
             currentProduct.Title = product.Title;
             currentProduct.Description = product.Description;
             currentProduct.Image = product.Image;
+            currentProduct.Price = product.Price;
             currentProduct.CategoryID = product.CategoryID;
             currentProduct.BrandID = product.BrandID;
 

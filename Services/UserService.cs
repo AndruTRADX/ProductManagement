@@ -6,9 +6,9 @@ using ProductManagement.DTOs;
 
 namespace ProductManagement.Services;
 
-public class UserServices(ProductContext productContext, IPasswordHasher<User> passwordHasher) : IUserService
+public class UserServices(UserContext userContext, IPasswordHasher<User> passwordHasher) : IUserService
 {
-    private readonly ProductContext _dbContext = productContext;
+    private readonly UserContext _dbContext = userContext;
     private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
 
     public async Task<IEnumerable<UserDTO>> GetAll(int page, int pageSize)
@@ -18,7 +18,7 @@ public class UserServices(ProductContext productContext, IPasswordHasher<User> p
             .Take(pageSize)
             .Select(u => new UserDTO
             {
-                UserID = u.UserID,
+                UserID = u.UserId,
                 Name = u.Name,
                 UserName = u.UserName,
                 Email = u.Email,
@@ -32,10 +32,10 @@ public class UserServices(ProductContext productContext, IPasswordHasher<User> p
     public async Task<UserDTO?> Get(Guid id)
     {
         var user = await _dbContext.Users
-            .Where(u => u.UserID == id)
+            .Where(u => u.UserId == id)
             .Select(u => new UserDTO
             {
-                UserID = u.UserID,
+                UserID = u.UserId,
                 Name = u.Name,
                 UserName = u.UserName,
                 Email = u.Email,

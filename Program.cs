@@ -1,7 +1,8 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using ProductManagement.Context;
 using ProductManagement.Services;
+using ProductManagement.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,14 @@ builder.Services.AddSwaggerGen();
 /* builder.Services.AddDbContext<ProductContext>(p => p.UseInMemoryDatabase("ProductsDB")); */
 
 // Create the configuration to add a SQL database connection
-builder.Services.AddSqlServer<ProductContext>(builder.Configuration.GetConnectionString("cnProducts"));
+var connectionString = builder.Configuration.GetConnectionString("cnProducts");
+
+// Adding contexts
+builder.Services.AddDbContext<ProductContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<UserContext>();
 
 // Injectors
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -30,6 +38,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapIdentityApi<User>();
 
 app.UseHttpsRedirection();
 

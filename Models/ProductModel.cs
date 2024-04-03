@@ -24,6 +24,10 @@ public class Product
     [Range(0, int.MaxValue, ErrorMessage = "The Stock field must be a positive number.")]
     public int Stock { get; set; }
 
+    [Required(ErrorMessage = "The Price field is required.")]
+    [Range(0, int.MaxValue, ErrorMessage = "The PRice field must be a positive number.")]
+    public int Price { get; set; }
+
     [ForeignKey("Category")]
     public Guid CategoryID { get; set; }
 
