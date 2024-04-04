@@ -61,7 +61,7 @@ public class ProductContext(DbContextOptions<ProductContext> options) : DbContex
     {
         modelBuilder.Entity<User>(entity =>
         {
-            entity.ToTable("User");
+            entity.ToTable("Users");
             entity.HasKey(b => b.UserID);
             entity.Property(b => b.Name).IsRequired();
             entity.Property(b => b.UserName).IsRequired();
