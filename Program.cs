@@ -19,10 +19,6 @@ var connectionString = builder.Configuration.GetConnectionString("cnProducts");
 
 // Adding contexts
 builder.Services.AddDbContext<ProductContext>(options => options.UseSqlServer(connectionString));
-builder.Services.AddDbContext<UserContext>(options => options.UseSqlServer(connectionString));
-
-builder.Services.AddAuthorization();
-builder.Services.AddIdentityApiEndpoints<User>().AddEntityFrameworkStores<UserContext>();
 
 // Injectors
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -38,8 +34,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.MapIdentityApi<User>();
 
 app.UseHttpsRedirection();
 
