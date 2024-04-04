@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ProductManagement.Context;
 using ProductManagement.Models;
@@ -6,10 +5,9 @@ using ProductManagement.DTOs;
 
 namespace ProductManagement.Services;
 
-public class UserServices(UserContext userContext, IPasswordHasher<User> passwordHasher) : IUserService
+public class UserServices(ProductContext productContext) : IUserService
 {
-    private readonly UserContext _dbContext = userContext;
-    private readonly IPasswordHasher<User> _passwordHasher = passwordHasher;
+    private readonly ProductContext _dbContext = productContext;
 
     public async Task<IEnumerable<UserDTO>> GetAll(int page, int pageSize)
     {
@@ -18,7 +16,7 @@ public class UserServices(UserContext userContext, IPasswordHasher<User> passwor
             .Take(pageSize)
             .Select(u => new UserDTO
             {
-                UserID = u.UserId,
+                UserID = u.UserID,
                 Name = u.Name,
                 UserName = u.UserName,
                 Email = u.Email,
@@ -32,10 +30,10 @@ public class UserServices(UserContext userContext, IPasswordHasher<User> passwor
     public async Task<UserDTO?> Get(Guid id)
     {
         var user = await _dbContext.Users
-            .Where(u => u.UserId == id)
+            .Where(u => u.UserID == id)
             .Select(u => new UserDTO
             {
-                UserID = u.UserId,
+                UserID = u.UserID,
                 Name = u.Name,
                 UserName = u.UserName,
                 Email = u.Email,
@@ -48,7 +46,6 @@ public class UserServices(UserContext userContext, IPasswordHasher<User> passwor
 
     public async Task Save(User user)
     {
-        user.Password = HashPassword(user, user.Password);
         await _dbContext.Users.AddAsync(user);
         await _dbContext.SaveChangesAsync();
     }
@@ -62,11 +59,7 @@ public class UserServices(UserContext userContext, IPasswordHasher<User> passwor
             currentUser.Name = user.Name;
             currentUser.UserName = user.UserName;
             currentUser.Email = user.Email;
-
-            if (!string.IsNullOrWhiteSpace(user.Password))
-            {
-                currentUser.Password = HashPassword(user, user.Password);
-            }
+            currentUser.Password = user.Password;
 
             await _dbContext.SaveChangesAsync();
         }
@@ -81,11 +74,6 @@ public class UserServices(UserContext userContext, IPasswordHasher<User> passwor
             _dbContext.Users.Remove(currentUser);
             await _dbContext.SaveChangesAsync();
         }
-    }
-
-    public string HashPassword(User user, string password)
-    {
-        return _passwordHasher.HashPassword(user, password);
     }
 }
 public interface IUserService

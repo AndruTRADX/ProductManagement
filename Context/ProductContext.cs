@@ -8,12 +8,14 @@ public class ProductContext(DbContextOptions<ProductContext> options) : DbContex
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Brand> Brands { get; set; }
+    public DbSet<User> Users { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         ConfigureProductEntity(modelBuilder);
         ConfigureCategoryEntity(modelBuilder);
         ConfigureBrandEntity(modelBuilder);
+        ConfigureUserEntity(modelBuilder);
     }
 
     private static void ConfigureProductEntity(ModelBuilder modelBuilder)
@@ -52,6 +54,20 @@ public class ProductContext(DbContextOptions<ProductContext> options) : DbContex
             entity.HasKey(b => b.BrandID);
             entity.Property(b => b.Name).IsRequired().HasMaxLength(50);
             entity.Property(b => b.Logo).IsRequired();
+        });
+    }
+
+    private static void ConfigureUserEntity(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.ToTable("Users");
+            entity.HasKey(b => b.UserID);
+            entity.Property(b => b.Name).IsRequired();
+            entity.Property(b => b.UserName).IsRequired();
+            entity.Property(b => b.Email).IsRequired();
+            entity.Property(b => b.Password).IsRequired();
+            entity.Property(b => b.Role).IsRequired().HasDefaultValue("Customer");
         });
     }
 }

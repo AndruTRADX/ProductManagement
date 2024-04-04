@@ -37,13 +37,13 @@ public class UserController(IUserService userService) : ControllerBase
         }
 
         await _userService.Save(user);
-        return CreatedAtAction(nameof(Get), new { id = user.UserId }, user);
+        return CreatedAtAction(nameof(Get), new { id = user.UserID }, user);
     }
 
     [HttpPatch("{id}")]
     public async Task<IActionResult> Patch(Guid id, [FromBody] User user)
     {
-        if (id != user.UserId)
+        if (id != user.UserID)
         {
             return BadRequest();
         }
